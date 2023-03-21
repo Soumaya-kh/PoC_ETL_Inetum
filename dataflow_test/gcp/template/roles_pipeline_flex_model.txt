@@ -1,0 +1,55 @@
+gcloud projects add-iam-policy-binding dataflowtest-380909 --member="user:toumi.msh@gmail.com" --role=roles/iam.serviceAccountUser
+
+
+
+
+
+
+gcloud projects add-iam-policy-binding dataflowtest-380909 --member="serviceAccount:823307351858-compute@developer.gserviceaccount.com" --role=roles/dataflow.admin
+gcloud projects add-iam-policy-binding dataflowtest-380909 --member="serviceAccount:823307351858-compute@developer.gserviceaccount.com" --role=roles/dataflow.worker
+gcloud projects add-iam-policy-binding dataflowtest-380909 --member="serviceAccount:823307351858-compute@developer.gserviceaccount.com" --role=roles/bigquery.dataEditor
+gcloud projects add-iam-policy-binding dataflowtest-380909 --member="serviceAccount:823307351858-compute@developer.gserviceaccount.com" --role=roles/storage.objectAdmin
+gcloud projects add-iam-policy-binding dataflowtest-380909 --member="serviceAccount:823307351858-compute@developer.gserviceaccount.com" --role=roles/artifactregistry.reader
+
+
+
+
+
+gcloud artifacts repositories create dataflowflexmodelrepo \
+    --repository-format=docker \
+    --location=us	\
+    --async 
+
+
+
+gcloud auth configure-docker US-docker.pkg.dev
+
+
+gcloud builds submit --tag us-docker.pkg.dev/dataflowtest-380909/dataflowflexmodelrepo/dataflow/flex_dataflow_model_test:latest .
+
+
+
+
+
+
+ 
+gcloud dataflow flex-template build gs://dflowtestbucket/samples/dataflow/templates/beam-dataflow-model-test.json \
+--image "us-docker.pkg.dev/dataflowtest-380909/dataflowflexmodelrepo/dataflow/flex_dataflow_model_test:latest" \
+--sdk-language "PYTHON" \
+--metadata-file "metadata.json"
+
+
+
+
+
+
+
+
+
+gcloud dataflow flex-template run "flex-dataflow-template-test-`date +%Y%m%d-%H%M%S`" \
+--template-file-gcs-location "gs://dflowtestbucket/samples/dataflow/templates/beam-dataflow-model-test.json" \
+--parameters input='gs://dflowtestbucket/raw_data_webngrams.csv' \
+--parameters output='gs://dflowtestbucket/filtered_data_webngrams' \
+--region "us"
+
+

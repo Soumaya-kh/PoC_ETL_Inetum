@@ -1,0 +1,16 @@
+{
+  "name": "beam Python flex template for dataflow",
+  "description": "beam example for python flex template for dataflow.",
+  "parameters": [
+    {
+      "name": "input",
+      "label": "Input file in cloud storage or BQ Table",
+      "helpText": "During first tests, the name of the input cloud storage file. Then, it will be the name of the BQ table",
+    },
+    {
+      "name": "output",
+      "label": "Output file in cloud storage or BQ Table.",
+      "helpText": "During first tests, the name of the output cloud storage file. Then, it will be the name of the BQ table.",
+    }
+  ]
+}

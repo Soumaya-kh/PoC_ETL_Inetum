@@ -1,0 +1,6 @@
+python3 -m main \
+--input gs://dflowtestbucket/raw_data_webngrams.csv \
+--output gs://dflowtestbucket/filtered_data_webngrams\
+--runner DataflowRunner \
+--project dataflowtest-380909 \
+--temp_location gs://dflowtestbucket/tmp/
