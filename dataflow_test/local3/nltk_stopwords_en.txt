@@ -1,0 +1,9 @@
+{'further', 'very', "hasn't", 'will', 'yourselves', "that'll", 'at', 'under', "don't", 'each', "wasn't", 'had', 'in', 'having', 'him', 'is', 'that', 'themselves', 'no', 'ours', 'whom',
+ 'against', 'myself', 'out', 'them', "didn't", "you're", 's', 'other', 'he', 'after', 'all', 'herself', 'same', "needn't", 'own', 'what', 'as', 'we', 'so', 'your', 'who', 'above', 'som
+e', 'do', 'only', 'yours', 'their', 'just', 'ain', 'his', 'doesn', 'this', "won't", 'between', 'didn', "isn't", 'needn', 'has', 'i', 'by', "you'd", 'of', 'don', 'now', 'am', 'on', 'whe
+n', 've', "hadn't", 'theirs', 'from', 'are', "doesn't", "you'll", "haven't", 'himself', 'mustn', 'she', 'shouldn', 'again', 'its', 'isn', 'm', 'than', 'haven', 'over', 'hadn', 'can', '
+been', 'but', 'it', 'have', 'or', 'before', 'most', 'which', 'itself', 'o', 'then', 'd', 'how', 'mightn', 'why', 'with', 'ma', 'until', "you've", 'weren', 'couldn', 'more', "mightn't",
+ 'about', 'both', 'you', 'during', 'me', 'those', "she's", 'off', 't', 'shan', 'won', 'and', "it's", 'wasn', 'doing', 'for', 'to', 'there', 'few', 'being', 'not', 'y', 'ourselves', 'yo
+urself', "wouldn't", "shan't", "aren't", 'aren', 'does', 'such', 'nor', 'hers', 'through', 'an', 'her', 'were', 'up', 'below', 'once', 'here', 'should', 'too', 're', "couldn't", 'any',
+ "weren't", 'the', 'while', "shouldn't", 'if', 'down', 'they', "should've", 'did', 'these', 'was', 'where', 'hasn', 'into', 'wouldn', 'my', 'a', 'our', "mustn't", 'll', 'because', 'be'
+}
