@@ -1,0 +1,25 @@
+=== for the CS buckets ===
+
+python3 -m main \
+--input gs://dflowtestbucket/raw_data_webngrams.csv \
+--output gs://dflowtestbucket/filtered_data_webngrams\
+--runner DataflowRunner \
+--project dataflowtest-380909 \
+--temp_location gs://dflowtestbucket/tmp/
+
+
+
+
+
+
+=== for the BQ tables ===
+
+python3 -m main \
+--region us-west1 \
+--project dataflowtest-380909 \
+--dataset dataflowtestdataset \
+--tablein webngrams_111M_26GB  \
+--tableout table_output  \
+--runner DataflowRunner \
+--machine_type n1-standard-4
+--temp_location=gs://dflowtestbucket/tmp/
