@@ -1,0 +1,257 @@
+{
+    "name": "full_ngram_etl_without_stopword",
+    "description": "Data Pipeline Application",
+    "artifact": {
+        "name": "cdap-data-pipeline",
+        "version": "6.8.1",
+        "scope": "SYSTEM"
+    },
+    "config": {
+        "stages": [
+            {
+                "name": "BigQuerySource",
+                "plugin": {
+                    "name": "BigQueryTable",
+                    "type": "batchsource",
+                    "label": "BigQuerySource",
+                    "artifact": {
+                        "name": "google-cloud",
+                        "version": "0.21.1",
+                        "scope": "SYSTEM"
+                    },
+                    "properties": {
+                        "useConnection": "true",
+                        "connection": "${conn(ngram-connection)}",
+                        "dataset": "ngram_db",
+                        "table": "sample",
+                        "enableQueryingViews": "false",
+                        "schema": "{\"type\":\"record\",\"name\":\"output\",\"fields\":[{\"name\":\"date\",\"type\":[{\"type\":\"long\",\"logicalType\":\"timestamp-micros\"},\"null\"]},{\"name\":\"ngram\",\"type\":[\"string\",\"null\"]},{\"name\":\"lang\",\"type\":[\"string\",\"null\"]},{\"name\":\"type\",\"type\":[\"long\",\"null\"]},{\"name\":\"pos\",\"type\":[\"long\",\"null\"]},{\"name\":\"pre\",\"type\":[\"string\",\"null\"]},{\"name\":\"post\",\"type\":[\"string\",\"null\"]},{\"name\":\"url\",\"type\":[\"string\",\"null\"]}]}",
+                        "filter": "lang='en'"
+                    }
+                },
+                "outputSchema": "{\"type\":\"record\",\"name\":\"output\",\"fields\":[{\"name\":\"date\",\"type\":[{\"type\":\"long\",\"logicalType\":\"timestamp-micros\"},\"null\"]},{\"name\":\"ngram\",\"type\":[\"string\",\"null\"]},{\"name\":\"lang\",\"type\":[\"string\",\"null\"]},{\"name\":\"type\",\"type\":[\"long\",\"null\"]},{\"name\":\"pos\",\"type\":[\"long\",\"null\"]},{\"name\":\"pre\",\"type\":[\"string\",\"null\"]},{\"name\":\"post\",\"type\":[\"string\",\"null\"]},{\"name\":\"url\",\"type\":[\"string\",\"null\"]}]}",
+                "id": "BigQuerySource",
+                "type": "batchsource",
+                "label": "BigQuerySource",
+                "icon": "fa-plug",
+                "$$hashKey": "object:32",
+                "isPluginAvailable": true,
+                "_uiPosition": {
+                    "left": "68px",
+                    "top": "241.80001831054688px"
+                }
+            },
+            {
+                "name": "Python",
+                "plugin": {
+                    "name": "PythonEvaluator",
+                    "type": "transform",
+                    "label": "Python",
+                    "artifact": {
+                        "name": "python-transform",
+                        "version": "2.2.2",
+                        "scope": "USER"
+                    },
+                    "properties": {
+                        "script": "stop_words= [\"further\", \"very\", \"hasn't\", \"will\", \"yourselves\", \"that'll\", \"at\", \"under\", \"don't\", \"each\", \"wasn't\", \"had\", \"in\", \"having\", \"him\", \"is\", \"that\", \"themselves\", \"no\", \"ours\", \"whom\",\"against\", \"myself\", \"out\", \"them\", \"didn't\", \"you're\", \"s\", \"other\", \"he\", \"after\", \"all\", \"herself\", \"same\", \"needn't\", \"own\", \"what\", \"as\", \"we\", \"so\", \"your\", \"who\", \"aove\", \"some\", \"do\", \"only\", \"yours\", \"their\", \"just\", \"ain\", \"his\", \"doesn\", \"this\", \"won't\", \"between\", \"didn\", \"isn't\", \"needn\", \"has\", \"i\", \"by\", \"you'd\", \"of\",\"don\", \"now\", \"am\", \"on\", \"when\", \"ve\", \"hadn't\", \"theirs\", \"from\", \"are\", \"doesn't\", \"you'll\", \"haven't\", \"himself\", \"mustn\", \"she\", \"shouldn\", \"again\", \"its\", \"isn\", \"m\", \"than\", \"haven\", \"over\", \"hadn\", \"can\", \"been\", \"but\", \"it\", \"have\", \"or\", \"before\", \"most\", \"which\", \"itself\", \"o\", \"then\", \"d\", \"how\", \"mightn\", \"why\", \"with\", \"ma\", \"until\", \"you've\", \"weren\", \"couldn\", \"more\", \"mightn't\",\"about\", \"both\", \"you\", \"during\", \"me\", \"those\", \"she's\", \"off\", \"t\", \"shan\", \"won\", \"and\", \"it's\", \"wasn\", \"doing\", \"for\", \"to\", \"there\", \"few\", \"being\", \"not\", \"y\", \"ourselves\", \"yourself\", \"wouldn't\", \"shan't\", \"aren't\", \"aren\", \"does\", \"such\", \"nor\", \"hers\", \"through\", \"an\", \"her\", \"were\", \"up\", \"below\", \"once\", \"here\", \"should\", \"too\", \"re\", \"couldn't\", \"any\",\"weren't\", \"the\", \"while\", \"shouldn't\", \"if\", \"down\", \"they\", \"should've\", \"did\", \"these\", \"was\", \"where\", \"hasn\", \"into\", \"wouldn\", \"my\", \"a\", \"our\", \"mustn't\", \"ll\", \"because\", \"be\"]\n\n# Define the function to filter rows based on the stop words\n\ndef transform(record, emitter, context):\n  clean_ngram= ''.join(e for e in record['ngram'].lower() if e.isalnum())\n  if (clean_ngram not in stop_words):\n    if not(clean_ngram.isnumeric()):\n            emitter.emit({\n                     'date':record['date'],\n                     'ngram':clean_ngram,\n                     'lang':record['lang'],\n                     'type':record['type'],\n                     'pos':record['pos'],\n                     'pre':record['pre'],\n                     'post':record['post'],\n                     'url':record['url'],\n                   })\n        \n     \n  \n",
+                        "executionMode": "Interpreted",
+                        "pythonBinary": "C:\\Users\\soumaya.khila\\AppData\\Local\\Programs\\Python\\Python311\\",
+                        "schema": "{\"type\":\"record\",\"name\":\"record\",\"fields\":[{\"name\":\"date\",\"type\":[{\"type\":\"long\",\"logicalType\":\"timestamp-micros\"},\"null\"]},{\"name\":\"ngram\",\"type\":[\"string\",\"null\"]},{\"name\":\"lang\",\"type\":[\"string\",\"null\"]},{\"name\":\"type\",\"type\":[\"long\",\"null\"]},{\"name\":\"pos\",\"type\":[\"long\",\"null\"]},{\"name\":\"pre\",\"type\":[\"string\",\"null\"]},{\"name\":\"post\",\"type\":[\"string\",\"null\"]},{\"name\":\"url\",\"type\":[\"string\",\"null\"]}]}"
+                    }
+                },
+                "outputSchema": "{\"type\":\"record\",\"name\":\"record\",\"fields\":[{\"name\":\"date\",\"type\":[{\"type\":\"long\",\"logicalType\":\"timestamp-micros\"},\"null\"]},{\"name\":\"ngram\",\"type\":[\"string\",\"null\"]},{\"name\":\"lang\",\"type\":[\"string\",\"null\"]},{\"name\":\"type\",\"type\":[\"long\",\"null\"]},{\"name\":\"pos\",\"type\":[\"long\",\"null\"]},{\"name\":\"pre\",\"type\":[\"string\",\"null\"]},{\"name\":\"post\",\"type\":[\"string\",\"null\"]},{\"name\":\"url\",\"type\":[\"string\",\"null\"]}]}",
+                "inputSchema": [
+                    {
+                        "name": "BigQuerySource",
+                        "schema": "{\"type\":\"record\",\"name\":\"output\",\"fields\":[{\"name\":\"date\",\"type\":[{\"type\":\"long\",\"logicalType\":\"timestamp-micros\"},\"null\"]},{\"name\":\"ngram\",\"type\":[\"string\",\"null\"]},{\"name\":\"lang\",\"type\":[\"string\",\"null\"]},{\"name\":\"type\",\"type\":[\"long\",\"null\"]},{\"name\":\"pos\",\"type\":[\"long\",\"null\"]},{\"name\":\"pre\",\"type\":[\"string\",\"null\"]},{\"name\":\"post\",\"type\":[\"string\",\"null\"]},{\"name\":\"url\",\"type\":[\"string\",\"null\"]}]}"
+                    }
+                ],
+                "id": "Python",
+                "type": "transform",
+                "label": "Python",
+                "icon": "icon-pythonevaluator",
+                "$$hashKey": "object:33",
+                "isPluginAvailable": true,
+                "_uiPosition": {
+                    "left": "368px",
+                    "top": "241.80001831054688px"
+                }
+            },
+            {
+                "name": "Parse date",
+                "plugin": {
+                    "name": "Wrangler",
+                    "type": "transform",
+                    "label": "Parse date",
+                    "artifact": {
+                        "name": "wrangler-transform",
+                        "version": "4.8.1",
+                        "scope": "SYSTEM"
+                    },
+                    "properties": {
+                        "field": "*",
+                        "precondition": "false",
+                        "directives": "set-column :date date.toLocalDate()\nset-type :date string\nsplit-to-columns :date -\nrename date_1 year\nrename date_2 month\ndrop :date_3",
+                        "on-error": "fail-pipeline",
+                        "schema": "{\"type\":\"record\",\"name\":\"record\",\"fields\":[{\"name\":\"date\",\"type\":[\"string\",\"null\"]},{\"name\":\"ngram\",\"type\":[\"string\",\"null\"]},{\"name\":\"lang\",\"type\":[\"string\",\"null\"]},{\"name\":\"type\",\"type\":[\"long\",\"null\"]},{\"name\":\"pos\",\"type\":[\"long\",\"null\"]},{\"name\":\"pre\",\"type\":[\"string\",\"null\"]},{\"name\":\"post\",\"type\":[\"string\",\"null\"]},{\"name\":\"url\",\"type\":[\"string\",\"null\"]},{\"name\":\"year\",\"type\":[\"string\",\"null\"]},{\"name\":\"month\",\"type\":[\"string\",\"null\"]}]}",
+                        "workspaceId": "2c909c29-c5f7-4a64-acd3-e6d3c2111c83"
+                    }
+                },
+                "outputSchema": "{\"type\":\"record\",\"name\":\"record\",\"fields\":[{\"name\":\"date\",\"type\":[\"string\",\"null\"]},{\"name\":\"ngram\",\"type\":[\"string\",\"null\"]},{\"name\":\"lang\",\"type\":[\"string\",\"null\"]},{\"name\":\"type\",\"type\":[\"long\",\"null\"]},{\"name\":\"pos\",\"type\":[\"long\",\"null\"]},{\"name\":\"pre\",\"type\":[\"string\",\"null\"]},{\"name\":\"post\",\"type\":[\"string\",\"null\"]},{\"name\":\"url\",\"type\":[\"string\",\"null\"]},{\"name\":\"year\",\"type\":[\"string\",\"null\"]},{\"name\":\"month\",\"type\":[\"string\",\"null\"]}]}",
+                "inputSchema": [
+                    {
+                        "name": "Python",
+                        "schema": "{\"type\":\"record\",\"name\":\"record\",\"fields\":[{\"name\":\"date\",\"type\":[{\"type\":\"long\",\"logicalType\":\"timestamp-micros\"},\"null\"]},{\"name\":\"ngram\",\"type\":[\"string\",\"null\"]},{\"name\":\"lang\",\"type\":[\"string\",\"null\"]},{\"name\":\"type\",\"type\":[\"long\",\"null\"]},{\"name\":\"pos\",\"type\":[\"long\",\"null\"]},{\"name\":\"pre\",\"type\":[\"string\",\"null\"]},{\"name\":\"post\",\"type\":[\"string\",\"null\"]},{\"name\":\"url\",\"type\":[\"string\",\"null\"]}]}"
+                    }
+                ],
+                "id": "Parse-date",
+                "type": "transform",
+                "label": "Parse date",
+                "icon": "icon-DataPreparation",
+                "$$hashKey": "object:34",
+                "isPluginAvailable": true,
+                "_uiPosition": {
+                    "left": "668px",
+                    "top": "241.80001831054688px"
+                }
+            },
+            {
+                "name": "Group By Date & ngram",
+                "plugin": {
+                    "name": "GroupByAggregate",
+                    "type": "batchaggregator",
+                    "label": "Group By Date & ngram",
+                    "artifact": {
+                        "name": "core-plugins",
+                        "version": "2.10.1",
+                        "scope": "SYSTEM"
+                    },
+                    "properties": {
+                        "groupByFields": "year,month,ngram",
+                        "aggregates": "ngramCount:Count(ngram)"
+                    }
+                },
+                "outputSchema": "{\"type\":\"record\",\"name\":\"record.typeagg\",\"fields\":[{\"name\":\"year\",\"type\":[\"string\",\"null\"]},{\"name\":\"month\",\"type\":[\"string\",\"null\"]},{\"name\":\"ngram\",\"type\":[\"string\",\"null\"]},{\"name\":\"ngramCount\",\"type\":\"long\"}]}",
+                "inputSchema": [
+                    {
+                        "name": "Parse date",
+                        "schema": "{\"type\":\"record\",\"name\":\"record\",\"fields\":[{\"name\":\"date\",\"type\":[\"string\",\"null\"]},{\"name\":\"ngram\",\"type\":[\"string\",\"null\"]},{\"name\":\"lang\",\"type\":[\"string\",\"null\"]},{\"name\":\"type\",\"type\":[\"long\",\"null\"]},{\"name\":\"pos\",\"type\":[\"long\",\"null\"]},{\"name\":\"pre\",\"type\":[\"string\",\"null\"]},{\"name\":\"post\",\"type\":[\"string\",\"null\"]},{\"name\":\"url\",\"type\":[\"string\",\"null\"]},{\"name\":\"year\",\"type\":[\"string\",\"null\"]},{\"name\":\"month\",\"type\":[\"string\",\"null\"]}]}"
+                    }
+                ],
+                "id": "Group-By-Date-&-ngram",
+                "type": "batchaggregator",
+                "label": "Group By Date & ngram",
+                "icon": "icon-groupbyaggregate",
+                "$$hashKey": "object:35",
+                "isPluginAvailable": true,
+                "_uiPosition": {
+                    "left": "968px",
+                    "top": "241.80001831054688px"
+                }
+            },
+            {
+                "name": "BigQuerySink",
+                "plugin": {
+                    "name": "BigQueryTable",
+                    "type": "batchsink",
+                    "label": "BigQuerySink",
+                    "artifact": {
+                        "name": "google-cloud",
+                        "version": "0.21.1",
+                        "scope": "SYSTEM"
+                    },
+                    "properties": {
+                        "useConnection": "true",
+                        "operation": "insert",
+                        "truncateTable": "true",
+                        "allowSchemaRelaxation": "true",
+                        "location": "US",
+                        "createPartitionedTable": "false",
+                        "partitioningType": "NONE",
+                        "schema": "{\"type\":\"record\",\"name\":\"output\",\"fields\":[{\"name\":\"year\",\"type\":[\"string\",\"null\"]},{\"name\":\"month\",\"type\":[\"string\",\"null\"]},{\"name\":\"ngram\",\"type\":[\"string\",\"null\"]},{\"name\":\"ngramCount\",\"type\":[\"long\",\"null\"]}]}",
+                        "dataset": "ngram_db",
+                        "table": "ngram_to_analyse",
+                        "connection": "${conn(ngram-connection)}"
+                    }
+                },
+                "outputSchema": "{\"type\":\"record\",\"name\":\"output\",\"fields\":[{\"name\":\"year\",\"type\":[\"string\",\"null\"]},{\"name\":\"month\",\"type\":[\"string\",\"null\"]},{\"name\":\"ngram\",\"type\":[\"string\",\"null\"]},{\"name\":\"ngramCount\",\"type\":[\"long\",\"null\"]}]}",
+                "inputSchema": [
+                    {
+                        "name": "Group By Date & ngram",
+                        "schema": "{\"type\":\"record\",\"name\":\"record.typeagg\",\"fields\":[{\"name\":\"year\",\"type\":[\"string\",\"null\"]},{\"name\":\"month\",\"type\":[\"string\",\"null\"]},{\"name\":\"ngram\",\"type\":[\"string\",\"null\"]},{\"name\":\"ngramCount\",\"type\":\"long\"}]}"
+                    }
+                ],
+                "id": "BigQuerySink",
+                "type": "batchsink",
+                "label": "BigQuerySink",
+                "icon": "fa-plug",
+                "$$hashKey": "object:36",
+                "isPluginAvailable": true,
+                "_uiPosition": {
+                    "left": "1268px",
+                    "top": "241.80001831054688px"
+                }
+            }
+        ],
+        "connections": [
+            {
+                "from": "BigQuerySource",
+                "to": "Python"
+            },
+            {
+                "from": "Python",
+                "to": "Parse date"
+            },
+            {
+                "from": "Parse date",
+                "to": "Group By Date & ngram"
+            },
+            {
+                "from": "Group By Date & ngram",
+                "to": "BigQuerySink"
+            }
+        ],
+        "comments": [],
+        "resources": {
+            "memoryMB": 2048,
+            "virtualCores": 3
+        },
+        "driverResources": {
+            "memoryMB": 2048,
+            "virtualCores": 1
+        },
+        "postActions": [],
+        "properties": {},
+        "processTimingEnabled": true,
+        "stageLoggingEnabled": false,
+        "description": "Data Pipeline Application",
+        "engine": "spark",
+        "schedule": "0 1 */1 * *",
+        "maxConcurrentRuns": 1,
+        "pushdownEnabled": false,
+        "transformationPushdown": {
+            "plugin": {
+                "name": "BigQueryPushdownEngine",
+                "label": "BigQueryPushdown",
+                "type": "sqlengine",
+                "artifact": {
+                    "name": "google-cloud",
+                    "version": "0.21.1",
+                    "scope": "SYSTEM"
+                },
+                "properties": {
+                    "useConnection": "false",
+                    "project": "auto-detect",
+                    "serviceAccountType": "filePath",
+                    "serviceFilePath": "auto-detect",
+                    "location": "US",
+                    "retainTables": "false",
+                    "tempTableTTLHours": "72",
+                    "jobPriority": "batch",
+                    "useStorageReadAPI": "false"
+                }
+            }
+        }
+    },
+    "version": "-SNAPSHOT"
+}
