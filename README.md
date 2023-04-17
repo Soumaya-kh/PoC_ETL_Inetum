@@ -1,7 +1,7 @@
 # Objectif(s)
 
  
-Ce wiki décrit les travaux réalisés dans le cadre de la montée en compétence sur les solutions Cloud Data Fusion et Cloud Dataflow sur GCP.
+Ce projet décrit les travaux réalisés dans le cadre de la montée en compétence sur les solutions Cloud Data Fusion et Cloud Dataflow sur GCP.
 L'objectif macro est d'éprouver ces solutions afin d'acquérir suffisamment de recul sur leurs capacités et limites, notamment vis-à-vis d'autres solutions (on-premise et sur cloud), et selon les différents cas d'usage qui peuvent exister (en fonction des diverses situations clients).
 
 # Définition du cas d'usage
